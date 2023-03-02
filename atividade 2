@@ -1,0 +1,55 @@
+DROP DATABASE IF EXISTS atividade_bd;
+CREATE DATABASE atividade_bd;
+USE atividade_bd;
+
+CREATE TABLE clientes (
+	id_clientes INT NOT NULL AUTO_INCREMENT
+    , nome VARCHAR(255) NOT NULL
+    , whatsapp VARCHAR (255) NOT NULL
+    , CONSTRAINT pk_clientes PRIMARY KEY (id_clientes)
+    );
+
+CREATE TABLE servicos (
+	id_servicos INT NOT NULL AUTO_INCREMENT
+    , nome_servico VARCHAR(255) NOT NULL
+    , valor_servico DECIMAL NOT NULL
+    , CONSTRAINT pk_servicos PRIMARY KEY (id_servicos)
+);
+
+CREATE TABLE servico_por_cliente (
+	id_servico_cliente INT PRIMARY KEY NOT NULL AUTO_INCREMENT
+    , id_clientes INT NOT NULL
+    , id_servicos INT NOT NULL
+    , CONSTRAINT fk_clientes FOREIGN KEY (id_clientes) REFERENCES clientes (id_clientes)
+    , CONSTRAINT fk_servicos FOREIGN KEY (id_servicos) REFERENCES servicos (id_servicos)
+);
+
+INSERT INTO clientes (nome, whatsapp) 
+VALUES ("AMANDA", "00000-0000"),
+("MARIA", "11111-1111"),
+("BIANCA", "22222-2222"),
+("CARLA", "33333-3333"),
+("DENISE", "44444-4444");
+
+INSERT INTO servicos (nome_servico, valor_servico)
+VALUES ("CORTAR CABELO", 40.00),
+("FAZER A UNHA", 30.00),
+("FAZER O PÉ", 35.00),
+("DEPILAÇÃO", 50.00),
+("HIDRATAÇÃO", 80.00);
+
+INSERT INTO  servico_por_cliente (id_clientes, id_servicos)
+VALUES (1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+
+ALTER TABLE clientes ADD COLUMN cpf VARCHAR(11) NOT NULL;
+ALTER TABLE servico_por_cliente ADD COLUMN data_servico DATETIME;
+
+ALTER TABLE servicos MODIFY COLUMN valor_servico DECIMAL NOT NULL DEFAULT 0.00;
+ALTER TABLE clientes MODIFY COLUMN whatsapp VARCHAR (16) NOT NULL; 
+
+
+
