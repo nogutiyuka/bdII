@@ -1,0 +1,86 @@
+Para realizar esta atividade, aplique as regras de boas práticas e padrões de nomenclatura apresentados durante a aula. 
+
+Crie uma base de dados Universidade com as tabelas a seguir: 
+Alunos (MAT, Nome, endereço, cidade) 
+disciplinas (COD_DISC, nome_disc, cargaHor) 
+Professor (COD_PROF, nome, Endereço, cidade) 
+TURMA (COD_DISC, COD_Turma, COD_PROF, horário) 
+COD_DISC referencia Disciplinas 
+COD_PROF referencia Professor
+Histórico (MAT, CODDisc, COD_TURMA, COD_PROF, frequência, nota) 
+MAT referencia Alunos 
+CODDisc referencia Disciplinas
+COD_TURMA referencia Turma
+COD_PROF referencia professor
+
+
+DROP DATABASE IF EXISTS universidade;
+CREATE DATABASE universidade;
+USE universidade;
+
+CREATE TABLE estados (
+	id_estado INT NOT NULL AUTO_INCREMENT
+    ,nome_estado VARCHAR(50) NOT NULL
+    ,sigla_estado VARCHAR(2)
+    ,CONSTRAINT pk_estado PRIMARY KEY (id_estado)
+);
+
+CREATE TABLE cidades (
+	id_cidade INT NOT NULL AUTO_INCREMENT
+    ,nome_cidade VARCHAR(50) NOT NULL
+    ,estado_id INT NOT NULL
+    ,CONSTRAINT pk_cidade PRIMARY KEY (id_cidade)
+    ,CONSTRAINT fk_estado_cidade FOREIGN KEY (estado_id) REFERENCES estados (id_estado)
+);
+
+CREATE TABLE alunos (
+	id_aluno INT NOT NULL AUTO_INCREMENT
+    ,nome_aluno VARCHAR(100) NOT NULL
+    ,endereco_aluno VARCHAR (200) NOT NULL
+    ,cidade_id INT NOT NULL
+    ,CONSTRAINT pk_aluno PRIMARY KEY (id_aluno)
+    ,CONSTRAINT fk_cidade_aluno FOREIGN KEY (cidade_id) REFERENCES cidades (id_cidade)
+);
+
+CREATE TABLE disciplinas (
+	  id_disciplina INT NOT NULL AUTO_INCREMENT
+    ,nome_disciplina VARCHAR(100) NOT NULL
+    ,carga_horaria INT NOT NULL
+    ,CONSTRAINT pk_disciplina PRIMARY KEY (id_disciplina)
+);
+
+CREATE TABLE professores (
+	  id_professor INT NOT NULL AUTO_INCREMENT
+    ,nome_professor VARCHAR (100) NOT NULL
+    ,endereco_professor VARCHAR(200) NOT NULL
+    ,cidade_id INT NOT NULL
+    ,CONSTRAINT pk_professor PRIMARY KEY (id_professor)
+    ,CONSTRAINT fk_cidade_professor FOREIGN KEY (cidade_id) REFERENCES cidades (id_cidade)
+);
+
+CREATE TABLE turmas (
+	  id_turma INT NOT NULL AUTO_INCREMENT
+    ,disciplina_id INT NOT NULL 
+    ,professor_id INT NOT NULL 
+    ,CONSTRAINT pk_turma PRIMARY KEY (id_turma)
+    ,CONSTRAINT fk_disciplina_turma FOREIGN KEY (disciplina_id) REFERENCES disciplinas (id_disciplina)
+    ,CONSTRAINT fk_professor_turma FOREIGN KEY (professor_id) REFERENCES professores (id_professor)
+);
+
+CREATE TABLE historicos (
+	  id_historico INT NOT NULL AUTO_INCREMENT
+    ,frequencia INT NOT NULL
+    ,nota DECIMAL NOT NULL
+    ,aluno_id INT NOT NULL 
+    ,disciplina_id INT NOT NULL 
+    ,turma_id INT NOT NULL 
+    ,professor_id INT NOT NULL 
+    ,CONSTRAINT pk_historico PRIMARY KEY (id_historico)
+    ,CONSTRAINT fk_aluno_historico FOREIGN KEY (aluno_id) REFERENCES alunos (id_aluno)
+	  ,CONSTRAINT fk_disciplina_historico FOREIGN KEY (disciplina_id) REFERENCES disciplinas (id_disciplina)
+    ,CONSTRAINT fk_turma_historico FOREIGN KEY (turma_id) REFERENCES turmas (id_turma)
+    ,CONSTRAINT fk_professor_historico FOREIGN KEY (professor_id) REFERENCES professores (id_professor)
+);
+
+
+
