@@ -1,0 +1,37 @@
+Considere as tabelas "Pessoas" e "Enderecos". A tabela "Pessoas" possui os seguintes atributos: id, nome, idade e id_endereco. A tabela "Enderecos" possui os seguintes atributos: id, rua, numero e cidade. Qual comando SQL exibirá o nome, idade e rua das pessoas que possuem endereço na cidade de São Paulo, ordenados por idade de forma decrescente?
+
+CREATE TABLE enderecos (
+	id_endereco SERIAL NOT NULL PRIMARY KEY,
+	rua VARCHAR(50) NOT NULL,
+    numero INT NOT NULL,
+	cidade VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE pessoas (
+	id_cliente SERIAL NOT NULL PRIMARY KEY,
+	nome VARCHAR(255) NOT NULL, 
+	idade INT NOT NULL,
+    endereco_id INT NOT NULL REFERENCES enderecos(id_endereco)
+);
+
+INSERT INTO enderecos (rua, numero, cidade)
+VALUES ('El dourado', 1975, 'São Paulo'),
+	('Engenheiro Francisco Beltrão', 1515, 'Alto Paraná'),
+	('Avenida General Andrade Neves', 1010, 'São Paulo');
+
+INSERT INTO pessoas (nome, idade, endereco_id)
+VALUES 
+	('Maria', 30, 1), -- sim
+	('Janaina', 42, 2),
+	('Gertrudes', 23, 3), -- sim 
+	('Regina', 35, 1), -- sim
+	('Maria Margareth', 32, 2);
+
+-- nome, idade e rua das pessoas que possuem endereço na cidade de São Paulo, ordenados por idade de forma decrescente
+		
+SELECT p.nome, p.idade, ende.rua
+FROM pessoas p, enderecos ende
+WHERE ende.id_endereco = p.endereco_id
+AND ende.cidade = 'São Paulo'
+GROUP BY p.nome, p.idade, ende.rua
+ORDER BY p.idade DESC;

@@ -1,0 +1,35 @@
+Dado o esquema abaixo, escreva uma consulta que retorne a quantidade total de vendas para cada produto em ordem decrescente de quantidade:
+
+Produto (id, nome, preço)
+
+Venda (id, produto_id, quantidade, data)
+
+CREATE TABLE produtos (
+	id_produto SERIAL NOT NULL PRIMARY KEY,
+	nome VARCHAR(50) NOT NULL,
+	preco DECIMAL(7, 2) NOT NULL
+);
+
+CREATE TABLE vendas (
+	id_venda SERIAL NOT NULL PRIMARY KEY,
+    produto_id INT NOT NULL REFERENCES produtos(id_produto),
+    quantidade INT NOT NULL,
+    data_venda DATE NOT NULL
+);
+
+INSERT INTO produtos (nome, preco)
+VALUES ('alimento', 20),
+	('higiene', 15),
+	('bebida', 10);
+    
+INSERT INTO vendas (produto_id, quantidade, data_venda)
+VALUES (1, 2, '2019-01-02'),
+		(2, 1, '2019-01-02'), 
+        (3, 3, '2019-01-02'),
+        (1, 10, '2019-01-02');
+        
+SELECT SUM(id_venda) as qtd_total
+FROM vendas v, produtos p
+WHERE p.id_produto = v.produto_id
+GROUP BY qtd_total
+ORDER BY qtd_total DESC;

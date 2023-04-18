@@ -1,0 +1,50 @@
+Dadas as tabelas "funcionarios" e "vendas", selecione o nome do funcionário e a quantidade de vendas que ele realizou entre as datas de '2019-01-01' e '2020-01-01', em ordem decrescente de quantidade de vendas:
+
+Tabela "funcionarios":
+id_funcionario (chave primária)
+nome_funcionario
+cargo
+salario
+
+Tabela "vendas":
+id_venda (chave primária)
+funcionário_id (chave estrangeira referenciando a tabela "funcionarios")
+data_venda
+valor_total
+
+CREATE TABLE funcionarios (
+	id_funcionario SERIAL NOT NULL PRIMARY KEY,
+	nome VARCHAR(50) NOT NULL,
+	salario_base DECIMAL(7, 2) NOT NULL,
+	cargo VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE vendas (
+	id_venda SERIAL NOT NULL PRIMARY KEY,
+	funcionario_id INT NOT NULL references funcionarios(id_funcionario),
+    data_venda DATE NOT NULL,
+    valor_total DECIMAL(7, 2) NOT NULL
+);
+
+INSERT INTO funcionarios (nome, salario_base, cargo)
+VALUES ('Maria', 3500.50, 'Gerente'),
+	('Janaina', 3000.00, 'Adm'),
+	('Gertrudes',  1500.00,  'Proprietário'),
+	('Regina', 5000.00, 'Caixa');
+
+INSERT INTO vendas (funcionario_id, data_venda, valor_total)
+VALUES 
+	(1, '2019-01-02', 20), -- sim
+	(2, '2021-01-01', 40), -- nao 
+	(3, '2019-03-01', 60), -- sim
+	(4, '2010-01-01', 10), -- nao
+	(1, '2019-01-08', 15), -- sim
+	(3, '2019-01-05', 30), -- sim 
+	(2, '2022-01-01', 19); -- nao
+
+
+SELECT f.nome, COUNT(v.id_venda)
+FROM funcionarios f, vendas v
+WHERE f.id_funcionario = v.funcionario_id
+AND v.data_venda BETWEEN '2019-01-01' AND '2020-01-01'
+ORDER BY COUNT(id_venda) DESC;

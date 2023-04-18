@@ -1,0 +1,76 @@
+Considere as seguintes tabelas para gerenciamento de tratamentos de beleza:
+
+Cliente
+id
+nome
+idade
+
+Servico
+id
+nome_servico
+preco
+ 
+Agendamento
+id
+cliente_id
+serviço_id
+data_servico
+hora_servico
+
+Escreva uma consulta SQL que retorne o nome do cliente, o nome do serviço agendado, o preço do serviço e a data do agendamento, filtrando apenas os agendamentos do serviço com nome contendo a palavra "hidratação", ordenando pelo nome do cliente em ordem alfabética.
+
+
+CREATE TABLE cliente (
+	id_cliente SERIAL NOT NULL PRIMARY KEY,
+	nome VARCHAR(50) NOT NULL,
+	idade INT NOT NULL
+);
+
+CREATE TABLE servico (
+	id_servico SERIAL NOT NULL PRIMARY KEY,
+	nome_servico VARCHAR(255) NOT NULL, 
+    preco DECIMAL(7, 2) NOT NULL
+);
+
+CREATE TABLE agendamento (
+	id_agendamento SERIAL NOT NULL PRIMARY KEY,
+	cliente_id INT NOT NULL references cliente(id_cliente),
+    servico_id INT NOT NULL REFERENCES servico(id_servico),
+    data_servico DATE NOT NULL,
+    hr_servico TIME NOT NULL
+);
+
+INSERT INTO cliente (nome, idade)
+VALUES ('Maria', 30),
+	('Janaina', 42),
+	('Gertrudes', 23),
+	('Regina', 35),
+	('Maria Margareth', 32);
+
+INSERT INTO servico (nome_servico, preco)
+VALUES 
+	('hidratação', 25.50),
+	('dois', 30),
+	('tres', 50),
+	('quatro', 120.40),
+	('cinco', 100.10);
+
+INSERT INTO agendamento (cliente_id, servico_id, data_servico, hr_servico)
+VALUES 
+		(1, 1, '2019-01-02', '20:50:40'),
+		(2, 2, '2019-01-02', '20:50:40'),
+        (3, 3, '2019-01-02', '20:50:40'),
+        (4, 4, '2019-01-02', '20:50:40'),
+        (5, 5, '2019-01-02', '20:50:40'),
+		(1, 5, '2019-01-02', '20:50:40'),
+		(2, 4, '2019-01-02', '20:50:40'),
+        (3, 2, '2019-01-02', '20:50:40'),
+        (4, 3, '2019-01-02', '20:50:40'),
+        (5, 1, '2019-01-02', '20:50:40');
+    
+SELECT DISTINCT c.nome, s.nome_servico, s.preco, a.data_servico
+FROM cliente c, servico s, agendamento a
+WHERE s.nome_servico = 'hidratação'
+AND c.id_cliente = a.cliente_id
+AND s.id_servico = a.servico_id
+ORDER BY c.nome;

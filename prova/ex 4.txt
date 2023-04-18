@@ -1,0 +1,34 @@
+Considere as tabelas "funcionarios" e "departamentos" com os seguintes atributos: funcionarios (id_funcionario, nome, idade, id_departamento) e departamentos (id_departamento, nome, descricao). Escreva um comando SQL para selecionar o nome dos funcionários e o nome dos departamentos em que eles trabalham, ordenados pelo nome do funcionário.
+
+CREATE TABLE departamentos (
+	id_departamento SERIAL NOT NULL PRIMARY KEY,
+	nome VARCHAR(255) NOT NULL, 
+	descricao VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE funcionarios (
+	id_funcionario SERIAL NOT NULL PRIMARY KEY,
+	nome VARCHAR(50) NOT NULL,
+	idade INT NOT NULL,
+	departamento_id INT NOT NULL REFERENCES departamentos(id_departamento)
+);
+
+INSERT INTO departamentos (nome, descricao)
+VALUES ('Administrativo', 'aaaaaaaaaaaaa'),
+	('Financeiro', 'fffffffffffff'),
+	('RH', 'rrrrrrrrrrrrrrr');
+
+INSERT INTO funcionarios (nome, idade, departamento_id)
+VALUES 
+	('Maria', 30, 1),
+	('Janaina', 42, 2),
+	('Gertrudes', 23, 3),
+	('Regina', 35, 1),
+	('Maria Margareth', 32, 2);
+
+-- Escreva um comando SQL para selecionar o nome dos funcionários e o nome dos departamentos em que eles trabalham, ordenados pelo nome do funcionário.
+
+SELECT f.nome, d.nome
+FROM funcionarios f, departamentos d
+WHERE d.id_departamento = f.departamento_id
+ORDER BY f.nome;

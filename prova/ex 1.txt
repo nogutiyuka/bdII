@@ -1,0 +1,107 @@
+Considere as seguintes tabelas para gerenciamento de jogos online:
+
+Jogador
+id
+nome
+idade
+pais
+
+Jogo
+id
+titulo
+ano_lancamento
+empresa_desenvolvedora
+
+Jogador_jogo
+jogador_id
+jogo_id
+horas_jogadas
+
+Escreva uma consulta SQL que retorne o nome dos jogadores, o título do jogo e a quantidade de horas jogadas pelos jogadores, ordenando pelo nome dos jogadores em ordem alfabética.
+
+DROP DATABASE IF EXISTS aula;
+CREATE DATABASE aula;
+USE aula;
+
+CREATE TABLE jogador (
+	id_jogador SERIAL NOT NULL PRIMARY KEY,
+	nome VARCHAR(50) NOT NULL,
+	idade INT NOT NULL,
+	pais VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE jogo (
+	id_jogo SERIAL NOT NULL PRIMARY KEY,
+	titulo VARCHAR(255) NOT NULL,
+	ano_lancamento INT NOT NULL,
+	jogador_id INT NOT NULL references jogador(id_jogador),
+    empresa VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE jogador_jogo (
+	id_jogador_jogo SERIAL NOT NULL PRIMARY KEY,
+	jogador_id INT NOT NULL references jogador(id_jogador),
+    jogo_id INT NOT NULL REFERENCES jogo(id_jogo),
+    hrs_jogadas INT NOT NULL
+);
+
+INSERT INTO jogador (nome, idade, pais)
+VALUES ('Maria', 30, 'Paranavai'),
+	('Janaina', 42, 'Paranavai'),
+	('Gertrudes', 23,  'Alto Parana'),
+	('Regina', 35, 'Maringa'),
+	('Maria Margareth', 32, 'Nova Alianca'),
+	('Davi Banana', 15, 'Paranavai'),
+	('Senhor Ouro', 55, 'Curitiba'),
+	('Rubi', 30, 'Paranavai'),
+	('Vovozinha', 65, 'Maringa'),
+	('Emma Cisne', 28, 'Paranavai'),
+	('Henrique', 18, 'Paranavai'),
+	('Arquibaldo', 29,  'Paranavai'),
+	('Augusto', 38, 'Paranavai'),
+	('Kelly', 35, 'Maringa');
+
+INSERT INTO jogo (titulo, ano_lancamento, jogador_id, empresa)
+VALUES 
+	('um', 2012, 1, 'rockstar games'),
+	('dois', 2013, 2, 'actvision blizzard'),
+	('tres', 2014, 3, 'actvision blizzard'),
+	('quatro', 2015, 4, 'actvision blizzard'),
+	('cinco', 2016, 5, 'rockstar games'),
+	('seis', 2017, 6, 'actvision blizzard'),
+	('sete', 2018, 7, 'rockstar games'),
+	('oito', 2019, 8, 'actvision blizzard'),
+	('nove', 2020, 9, 'rockstar games'),
+	('dez', 2021, 10, 'actvision blizzard'),
+	('onze', 2022, 11, 'rockstar games'),
+	('doze', 2023, 12, 'rockstar games'),
+	('treze', 2011, 13, 'actvision blizzard'),
+	('quatorze', 2010, 14, 'actvision blizzard'),
+	('quinze', 2012, 1, 'rockstar games'),
+	('dezesseis', 2013, 2, 'rockstar games');
+
+INSERT INTO jogador_jogo (jogador_id, jogo_id, hrs_jogadas)
+VALUES 
+		(1, 1, 10),
+		(2, 2, 20),
+        (3, 3, 30),
+        (4, 4, 40),
+        (5, 5, 50),
+        (6, 6, 60),
+        (7, 7, 70),
+        (8, 8, 80),
+        (9, 9, 90),
+        (10, 10, 100),
+        (11, 11, 110),
+        (12, 12, 120),
+        (13, 13, 130),
+        (14, 14, 140),
+        (1, 15, 150),
+        (2, 16, 160);
+
+SELECT DISTINCT player.nome, game.titulo, whatever.hrs_jogadas
+FROM jogador player, jogo game, jogador_jogo whatever 
+WHERE player.id_jogador = game.jogador_id
+AND player.id_jogador = whatever.jogador_id
+AND game.id_jogo = whatever.jogo_id
+ORDER BY player.nome;

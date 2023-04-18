@@ -1,0 +1,38 @@
+Dado o esquema abaixo, escreva uma consulta que retorne o nome do produto e a quantidade vendida em cada ano:
+
+Produto (id, nome, preço)
+
+Venda (id, produto_id, quantidade, data)
+
+CREATE TABLE produtos (
+	id_produto SERIAL NOT NULL PRIMARY KEY,
+	nome VARCHAR(50) NOT NULL,
+	preco DECIMAL(7, 2) NOT NULL
+);
+
+CREATE TABLE vendas (
+	id_venda SERIAL NOT NULL PRIMARY KEY,
+    produto_id INT NOT NULL REFERENCES produtos(id_produto),
+    quantidade INT NOT NULL,
+    data_venda DATE NOT NULL
+);
+
+INSERT INTO produtos (nome, preco)
+VALUES ('alimento', 20),
+	('higiene', 15),
+	('bebida', 10);
+    
+INSERT INTO vendas (produto_id, quantidade, data_venda)
+VALUES (1, 2, '2020-01-02'),
+	(2, 1, '2019-01-02'),
+        (3, 3, '2018-01-02'),
+        (1, 10, '2010-01-02'),
+	(1, 2, '2010-05-02'),
+	(2, 5, '2010-06-08');
+
+        
+SELECT SUM(v.quantidade) as qtd_total, p.nome, EXTRACT(YEAR FROM v.data_venda) AS ano
+FROM vendas v, produtos p
+WHERE p.id_produto = v.produto_id
+GROUP BY p.nome, ano
+ORDER BY ano;
